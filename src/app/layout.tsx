@@ -1,5 +1,6 @@
 
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navber from "@/components/Navber";
@@ -22,7 +23,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: LayoutProps<"/">) {
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html
       lang="en"
@@ -31,7 +34,15 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <ThemeProvider>
-          <Navber />
+          {/* Suspense lets usePathname stream in on routes whose
+              dynamic params are unknown at build time */}
+          <Suspense
+            fallback={
+              <div className="h-16 border-b border-border bg-white dark:bg-card" />
+            }
+          >
+            <Navber />
+          </Suspense>
 
           <main className="flex-1">
             {children}

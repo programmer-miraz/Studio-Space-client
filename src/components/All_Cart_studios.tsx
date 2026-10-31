@@ -1,9 +1,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Heart, Image as ImageIcon, MapPin, Star } from "lucide-react";
+import { ArrowRight, Heart, MapPin, Star } from "lucide-react";
 import { Button } from "./ui/button";
 type Studio = {
+    _id: string;
     name: string;
     category: string;
     rating: number;
@@ -48,10 +49,10 @@ const StudioCard = ({ studio }: { studio: Studio }) => {
                 </Button>
             </div>
 
-            {/* Card details */}
+
             <div className="space-y-2 p-4">
                 {/* Studio name */}
-                <h3 className="font-bold text-foreground">{studio.title}</h3>
+                <h3 className="font-bold text-foreground">  {studio.title.slice(0, 25)} {studio.title.length > 25 && "..."} </h3>
 
                 {/* Star rating + review count */}
                 <p className="flex items-center gap-1 text-sm">
@@ -77,7 +78,7 @@ const StudioCard = ({ studio }: { studio: Studio }) => {
                         </span>
                     </p>
                     <Link
-                        href="#"
+                        href={`/Details/${studio._id}`}
                         className="flex items-center gap-1 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90"
                     >
                         View Details
