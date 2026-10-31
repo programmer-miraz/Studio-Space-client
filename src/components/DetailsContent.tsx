@@ -13,10 +13,7 @@ import { StudioDetails } from "@/type";
 
 
 const DetailsContent = ({ studio }: { studio: StudioDetails}) => {
-  /* STEP 2: collect every image of the studio from the database data.
-     We NEVER generate images in the code — we only show what the data gives us. */
 
-  /* Selected thumbnail (0 = first image) */
   const [selected, setSelected] = useState(0);
    const images = studio.gallery??[];
      const selectedImage = images[selected];

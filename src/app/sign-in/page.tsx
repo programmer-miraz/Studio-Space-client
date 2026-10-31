@@ -13,12 +13,11 @@ import Link from "next/link";
 
 export default function Sign_in() {
 
-    /* STEP 1: small UI states */
+
     const [showPassword, setShowPassword] = useState(false); // eye toggle
     const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
     const [showErrors, setShowErrors] = useState(false); // show rule errors after first submit
 
-    /* STEP 2: the three password rules. Each broken rule adds one message. */
     const validatePassword = (password: string): string[] => {
         const errors: string[] = [];
 
@@ -35,22 +34,19 @@ export default function Sign_in() {
         return errors;
     };
 
-    /* STEP 3: sign-in handler (same logic as before — validate first,
-       then send the request with better-auth) */
+
     const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setShowErrors(true);
 
-        // read the inputs by their name attributes xopymihabo@mailinator.com Pa$$w0rd!
         const formData = new FormData(e.currentTarget);
         const user = Object.fromEntries(formData.entries()) as { name: string, password: string, email: string }
-        // Password validation চালানো
         setShowErrors(true);
 
         const errors = validatePassword(user.password);
         setPasswordErrors(errors);
 
-        // Password ভুল হলে registration বন্ধ হবে
+       
         if (errors.length > 0) {
             return;
         }
@@ -63,14 +59,14 @@ export default function Sign_in() {
         if (data) {
             console.log(data);
 
-
         }
         if (error) {
             console.log(error);
         }
     }
 
-    // const { data, error } = await authClient.signIn.email({
+    // const { data, error } = await authClient.signIn.social({
+
 
     // });
 
