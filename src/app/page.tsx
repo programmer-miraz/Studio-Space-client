@@ -1,8 +1,12 @@
+import Benner from "@/components/Benner";
+import Cetagory from "@/components/cetagory";
+
 
 export default function Home() {
   return (
     <div>
-      <h2>hlw</h2>
+      <Benner></Benner>
+      <Cetagory></Cetagory>
 
     </div>
   );
