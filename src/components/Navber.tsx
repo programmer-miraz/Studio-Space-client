@@ -1,9 +1,30 @@
 "use client"
-import { Aperture } from "lucide-react";
+import { Aperture, CalendarCheck, Heart, LayoutDashboard, LogOutIcon, PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ThemeToggle from "./Theme/ThemeToggle";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { authClient, useSession } from "@/lib/auth-client";
+
+import {
+    Avatar,
+    AvatarFallback,
+    AvatarImage,
+} from "@/components/ui/avatar"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+
+
+
+
+
+
 
 
 
@@ -16,7 +37,15 @@ const NAV_LINKS = [
 ];
 
 const Navber = () => {
+    const router = useRouter()
     const pathname = usePathname();
+    const session = useSession()
+    const userSession = session?.data?.user
+    const handleSignOUt = () => {
+        authClient.signOut()
+        router.push("/sign-in")
+    }
+
 
     return (
         <header className="border-b border-border bg-white dark:bg-card">
@@ -26,11 +55,11 @@ const Navber = () => {
                     <span className="flex size-9 items-center justify-center rounded-lg bg-primary">
                         <Aperture className="size-5 text-primary-foreground" />
                     </span>
-                   
-                        <span className="text-lg font-bold text-foreground">
-                            Studio<span className="text-primary">Space</span>
-                        </span>
-                   
+
+                    <span className="text-lg font-bold text-foreground">
+                        Studio<span className="text-primary">Space</span>
+                    </span>
+
                 </Link>
 
                 {/* Center links (hidden on small screens for now) */}
@@ -57,11 +86,64 @@ const Navber = () => {
 
                 {/* Right side actions */}
                 <div className="flex items-center gap-2">
+                {userSession ? (<div className=" absolute right-40 ">
                     <ThemeToggle />
-                    <Button variant="outline" className="rounded-full px-5">
-                        Login
-                    </Button>
-                    <Button className="rounded-full px-5">Register</Button>
+                </div>) : (<> <ThemeToggle /></>)}
+
+                    {userSession ? (<>
+
+                        <DropdownMenu>
+                            <DropdownMenuTrigger className="bg-gray-300" render={<Button variant="ghost" size="icon" className="rounded-full gap-2 cursor-pointer"><Avatar>
+                                <AvatarImage
+                                    referrerPolicy="no-referrer"
+                                    src={userSession?.image || "https://github.com/shadcn.png"}
+                                    alt={userSession?.name || "User"}
+
+                                />
+                                <AvatarFallback>{userSession?.name?.charAt(0).toUpperCase() || "U"}</AvatarFallback>
+                            </Avatar></Button>} />
+                            <DropdownMenuContent className="w-41 ">
+                                <DropdownMenuGroup>
+
+                                    <DropdownMenuItem className="flex cursor-pointer items-center gap-2.5">
+                                        <PlusCircle className="h-4 w-4" />
+                                        <span>Add New Studio</span>
+                                    </DropdownMenuItem>
+
+                                    <DropdownMenuItem className="flex cursor-pointer items-center gap-2.5">
+                                        <LayoutDashboard className="h-4 w-4" />
+                                        <span>My Studio Listings</span>
+                                    </DropdownMenuItem>
+
+                                    <DropdownMenuItem className="flex cursor-pointer items-center gap-2.5">
+                                        <CalendarCheck className="h-4 w-4" />
+                                        <span>My Bookings</span>
+                                    </DropdownMenuItem>
+
+                                    <DropdownMenuItem className="flex cursor-pointer items-center gap-2.5">
+                                        <Heart className="h-4 w-4" />
+                                        <span>Saved Wishlist</span>
+                                    </DropdownMenuItem>
+
+                                </DropdownMenuGroup>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuGroup>
+                                    <DropdownMenuItem variant="destructive" onClick={handleSignOUt}><LogOutIcon />Log out</DropdownMenuItem>
+                                </DropdownMenuGroup>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+
+
+                    </>) : (<div>
+                        <Link href="/sign-in">
+                            <Button variant="outline" className="rounded-full px-5">
+                                Sign In
+                            </Button>
+                        </Link>
+                        <Link href="/sign-up">
+                            <Button className="rounded-full px-5">Sign Up</Button>
+                        </Link>
+                    </div>)}
                 </div>
             </div>
         </header>
