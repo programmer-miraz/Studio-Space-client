@@ -20,6 +20,7 @@ import {
 type Category = {
   _id?: string;
   id?: string;
+  slug:string
   name?: string;
   title?: string;
 };
@@ -66,17 +67,17 @@ const getIconStyle = (name: string): IconStyle => {
 };
 
 // Shared card markup so the grid and carousel use the exact same design.
-const CategoryCard = ({ category, index }: { category: Category; index: number }) => {
+const CategoryCard = ({ category }: { category: Category; index: number }) => {
   const name = category.name ?? category.title ?? "Category";
   const { icon: Icon, className } = getIconStyle(name);
   return (
-    <a
-      href="#"
+    <Link
+      href={`/Explore_Studios?category=${category.slug}`}
       className="flex flex-col items-center gap-3 rounded-2xl bg-[#F4F1FB] px-4 py-8 transition-transform hover:-translate-y-1 hover:shadow-md dark:bg-card dark:border dark:border-border"
     >
       <Icon className={`size-8 ${className}`} strokeWidth={2} />
       <p className="text-sm font-semibold text-foreground">{name}</p>
-    </a>
+    </Link>
   );
 };
 
@@ -95,8 +96,8 @@ const Cetagory = async () => {
   if (!res.ok) {
     throw new Error("Failed to fetch category data");
   }
-  const data = await res.json();
-  const categories: Category[] = Array.isArray(data) ? data : data?.data ?? [];
+  const data: Category[] = await res.json();
+
 
   return (
     <section className="mx-auto mt-3 max-w-6xl px-4 py-4">
@@ -115,8 +116,8 @@ const Cetagory = async () => {
 
       {/* Desktop / laptop: original grid layout */}
       <div className="mt-4 hidden gap-4 lg:grid lg:grid-cols-5">
-        {categories.map((category, index) => (
-          <div key={category._id ?? category.id ?? index}>
+        {data.map((category, index) => (
+          <div key={index}>
             <CategoryCard category={category} index={index} />
           </div>
         ))}
@@ -128,17 +129,17 @@ const Cetagory = async () => {
         opts={{ align: "start", watchDrag: true }}
       >
         <CarouselContent className="mr-0">
-          {categories.map((category, index) => (
+          {data.map((category, index) => (
             <CarouselItem
-              key={category._id ?? category.id ?? index}
+              key={index}
               className="basis-1/2 sm:basis-1/3 md:basis-1/4"
             >
               <CategoryCard category={category} index={index} />
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious className="inset-y-auto left-1 top-1/2 size-8 -translate-y-1/2 bg-card shadow-md" />
-        <CarouselNext className="inset-y-auto right-1 top-1/2 size-8 -translate-y-1/2 bg-card shadow-md" />
+        <CarouselPrevious className="inset-y-auto left-1 top-1/2 size-8 cursor-pointer bg-card shadow-md" />
+        <CarouselNext className="inset-y-auto right-1 top-1/2 size-8 cursor-pointer bg-card shadow-md" />
       </Carousel>
     </section>
   );

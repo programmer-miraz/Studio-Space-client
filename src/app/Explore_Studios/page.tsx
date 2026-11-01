@@ -16,23 +16,30 @@ type Studio = {
     securityDeposit: string;
     image: string; // <- the image that is stored in the database for this card
 };
-const Explore_page = () => {
+type Props = {
+    searchParams: Promise<{
+        category?: string;
+    }>;
+};
+const Explore_page = ({ searchParams }: Props) => {
     return (
         <Suspense fallback={<Loading />}>
-            <ExploreContent />
+             <ExploreContent searchParams={searchParams} />
         </Suspense>
     );
 };
 
 
-const ExploreContent = async () => {
+const ExploreContent = async ({ searchParams }: Props) => {
     // 1. Fetch the data from the API
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/explore-studios`);
-    if (!res.ok) {
-        throw new Error("Failed to fetch studios data");
-    }
-    const data: Studio[] = await res.json();
+    const { category } = await searchParams;
 
+    const url = category
+        ? `${process.env.NEXT_PUBLIC_API_URL}/explore-studios?category=${category}`
+        : `${process.env.NEXT_PUBLIC_API_URL}/explore-studios`;
+
+    const res = await fetch(url);
+    const studios = await res.json();
 
 
     return (
@@ -53,7 +60,7 @@ const ExploreContent = async () => {
 
             {/* Card grid: 1 column on mobile, 2 on tablet, 4 on desktop */}
             <div className="mt-4 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                {data.map((studio: Studio, index) => (
+                {studios.map((studio: Studio, index:number) => (
                     <StudioCard
                         key={index}
                         studio={studio}
