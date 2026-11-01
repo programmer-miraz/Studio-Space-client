@@ -5,6 +5,7 @@ import {
     ArrowRight,
     Eye,
     EyeOff,
+    ImageIcon,
     Lock,
     Mail,
     UserRound,
@@ -48,7 +49,6 @@ export default function Sign_in() {
         const errors = validatePassword(user.password);
         setPasswordErrors(errors);
 
-        // Password ভুল হলে registration বন্ধ হবে
         if (errors.length > 0) {
             return;
         }
@@ -67,18 +67,37 @@ export default function Sign_in() {
         if (error) {
             console.log(error);
         }
+    }
 
-        // const { data, error } = await authClient.signIn.email({
+    const handleGoogle = async () => {
+        const { data, error } = await authClient.signIn.social({
+            provider: "google",
+            callbackURL: "/"
 
-        // });
+        });
 
-        // if (data) {
-        //     console.log(data);
-        // }
-        // if (error) {
-        //     console.log(error);
-        // }
-    };
+        if (data) {
+            console.log(data);
+        }
+        if (error) {
+            console.log(error);
+        }
+
+    }
+    const handleGithub = async () => {
+        const { data, error } = await authClient.signIn.social({
+            provider: "github"
+        })
+        if (data) {
+            console.log(data);
+        }
+        if (error) {
+            console.log(error);
+        }
+
+    }
+
+
 
 
     /* STEP 5: the UI */
@@ -115,6 +134,22 @@ export default function Sign_in() {
                             name="name"
                             type="text"
                             placeholder="Name"
+                            className="w-full rounded-xl border border-border bg-background py-2.5 pl-9 pr-3 text-sm outline-none placeholder:text-muted-foreground focus:border-primary"
+                        />
+                    </div>
+                </div>
+                {/* image url */}
+                <div className="space-y-2">
+                    <label htmlFor="email" className="text-sm font-bold text-foreground">
+                        image url
+                    </label>
+                    <div className="relative">
+                              <ImageIcon className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                        <input
+                            id="image"
+                            name="url"
+                            type="url"
+                            placeholder="image url"
                             className="w-full rounded-xl border border-border bg-background py-2.5 pl-9 pr-3 text-sm outline-none placeholder:text-muted-foreground focus:border-primary"
                         />
                     </div>
@@ -206,6 +241,7 @@ export default function Sign_in() {
                 {/* Sign in with Google */}
 
                 <button
+                    onClick={handleGoogle}
                     type="button"
                     className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-gray-300 bg-white px-4 py-3 font-medium text-gray-700 shadow-sm transition-all duration-200 hover:bg-gray-50 hover:shadow-md dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:hover:bg-gray-800"
                 >
@@ -235,10 +271,11 @@ export default function Sign_in() {
 
                     <span>Continue with Google</span>
                 </button>
-       
+
                 <button
+                    onClick={handleGithub}
                     type="button"
-                    className="flex w-full items-center justify-center gap-3 rounded-xl border border-gray-300 bg-white px-4 py-3 font-medium text-gray-700 shadow-sm transition-all duration-200 hover:bg-gray-50 hover:shadow-md dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:hover:bg-gray-800"
+                    className="flex w-full items-center cursor-pointer justify-center gap-3 rounded-xl border border-gray-300 bg-white px-4 py-3 font-medium text-gray-700 shadow-sm transition-all duration-200 hover:bg-gray-50 hover:shadow-md dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:hover:bg-gray-800"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"

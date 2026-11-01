@@ -1,5 +1,5 @@
 "use client"
-import { Aperture, CalendarCheck, Heart, LayoutDashboard, LogOutIcon, PlusCircle } from "lucide-react";
+import { Aperture, CalendarCheck, ChevronDown, Heart, LayoutDashboard, LogOutIcon, PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ThemeToggle from "./Theme/ThemeToggle";
 import Link from "next/link";
@@ -86,22 +86,40 @@ const Navber = () => {
 
                 {/* Right side actions */}
                 <div className="flex items-center gap-2">
-                {userSession ? (<div className=" absolute right-40 ">
-                    <ThemeToggle />
-                </div>) : (<> <ThemeToggle /></>)}
+                    {userSession ? (<div className=" absolute right-68 ">
+                        <ThemeToggle />
+                    </div>) : (<> <ThemeToggle /></>)}
 
                     {userSession ? (<>
 
                         <DropdownMenu>
-                            <DropdownMenuTrigger className="bg-gray-300" render={<Button variant="ghost" size="icon" className="rounded-full gap-2 cursor-pointer"><Avatar>
-                                <AvatarImage
-                                    referrerPolicy="no-referrer"
-                                    src={userSession?.image || "https://github.com/shadcn.png"}
-                                    alt={userSession?.name || "User"}
+                            <DropdownMenuTrigger
+                                render={
+                                    <Button
+                                        type="button"
+                                        variant="ghost"
+                                        className="h-10 gap-2 rounded-full border border-border/60 bg-transparent px-3 shadow-none cursor-pointer hover:bg-primary/5 active:bg-transparent"
+                                    >
+                                        <Avatar className="size-8 border border-primary/20">
+                                            <AvatarImage
+                                                referrerPolicy="no-referrer"
+                                                src={userSession?.image || "https://github.com/shadcn.png"}
+                                                alt={userSession?.name || "User"}
+                                            />
 
-                                />
-                                <AvatarFallback>{userSession?.name?.charAt(0).toUpperCase() || "U"}</AvatarFallback>
-                            </Avatar></Button>} />
+                                            <AvatarFallback className="bg-primary/10 font-semibold text-primary">
+                                                {userSession?.name?.charAt(0).toUpperCase() || "U"}
+                                            </AvatarFallback>
+                                        </Avatar>
+
+                                        <span className="max-w-24 truncate bg-transparent text-sm font-medium text-foreground">
+                                            {userSession?.name?.slice(0, 9) || "User"}
+                                        </span>
+
+                                        <ChevronDown className="size-4 text-muted-foreground" />
+                                    </Button>
+                                }
+                            />
                             <DropdownMenuContent className="w-41 ">
                                 <DropdownMenuGroup>
 

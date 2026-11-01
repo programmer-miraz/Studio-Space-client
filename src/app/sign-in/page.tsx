@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
+import { github } from "better-auth";
 
 export default function Sign_in() {
 
@@ -46,7 +47,7 @@ export default function Sign_in() {
         const errors = validatePassword(user.password);
         setPasswordErrors(errors);
 
-       
+
         if (errors.length > 0) {
             return;
         }
@@ -65,17 +66,37 @@ export default function Sign_in() {
         }
     }
 
-    // const { data, error } = await authClient.signIn.social({
+
+    const handleGoogleLogin = async () => {
+        const { data, error } = await authClient.signIn.social({
+            provider: "google",
+            callbackURL: "/",
+        });
 
 
-    // });
+        if (data) {
+            console.log(data);
+        }
+        if (error) {
+            console.log(error);
+        }
 
-    // if (data) {
-    //     console.log(data);
-    // }
-    // if (error) {
-    //     console.log(error);
-    // }
+    }
+
+    const handleGithub = async () => {
+        const { data, error } = await authClient.signIn.social({
+            provider: "github"
+        })
+        if (data) {
+            console.log(data);
+        }
+        if (error) {
+            console.log(error);
+        }
+
+    }
+
+
 
     /* STEP 5: the UI */
     return (
@@ -122,12 +143,12 @@ export default function Sign_in() {
                         <label htmlFor="password" className="text-sm font-bold text-foreground">
                             Password
                         </label>
-                        <a
+                        <Link
                             href="#"
                             className="text-xs font-semibold text-primary hover:underline"
                         >
                             Forgot Password?
-                        </a>
+                        </Link>
                     </div>
                     <div className="relative">
                         <Lock className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
@@ -186,8 +207,9 @@ export default function Sign_in() {
                 {/* Sign in with Google */}
 
                 <button
+                    onClick={handleGoogleLogin}
                     type="button"
-                    className="flex w-full items-center justify-center gap-3 rounded-xl border border-gray-300 bg-white px-4 py-3 font-medium text-gray-700 shadow-sm transition-all duration-200 hover:bg-gray-50 hover:shadow-md dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:hover:bg-gray-800"
+                    className="flex w-full items-center cursor-pointer justify-center gap-3 rounded-xl border border-gray-300 bg-white px-4 py-3 font-medium text-gray-700 shadow-sm transition-all duration-200 hover:bg-gray-50 hover:shadow-md dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:hover:bg-gray-800"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -215,10 +237,11 @@ export default function Sign_in() {
 
                     <span>Continue with Google</span>
                 </button>
-            
+
                 <button
+                    onClick={handleGithub}
                     type="button"
-                    className="flex w-full items-center justify-center gap-3 rounded-xl border border-gray-300 bg-white px-4 py-3 font-medium text-gray-700 shadow-sm transition-all duration-200 hover:bg-gray-50 hover:shadow-md dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:hover:bg-gray-800"
+                    className="flex w-full items-center cursor-pointer justify-center gap-3 rounded-xl border border-gray-300 bg-white px-4 py-3 font-medium text-gray-700 shadow-sm transition-all duration-200 hover:bg-gray-50 hover:shadow-md dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:hover:bg-gray-800"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -233,7 +256,7 @@ export default function Sign_in() {
 
                     <span>Continue with GitHub</span>
                 </button>
-                
+
 
 
                 {/* Register link at the bottom */}
@@ -246,4 +269,5 @@ export default function Sign_in() {
             </form>
         </section>
     );
+
 }

@@ -79,8 +79,8 @@ const Feature = async () => {
                         </CarouselItem>
                     ))}
                 </CarouselContent>
-                <CarouselPrevious className="-left-4 rounded-full bg-background" />
-                <CarouselNext className="-right-4 rounded-full bg-background" />
+                <CarouselPrevious className="-left-4 p-2 rounded-full bg-background" />
+                <CarouselNext className="-right-4 p-2  rounded-full bg-background" />
             </Carousel>
         </section>
     );

@@ -11,12 +11,13 @@ export default function ThemeToggle() {
     <Button
       variant="ghost"
       size="icon"
+    
       onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
       aria-label="Toggle theme"
-      className="text-muted-foreground hover:text-foreground"
+      className="text-foreground cursor-pointer hover:text-foreground"
     >
       {/* Sun shows in light mode, Moon in dark mode (pure CSS, no flicker) */}
-      <Sun className="dark:hidden" />
+      <Sun className="dark:hidden " />
       <Moon className="hidden dark:block" />
     </Button>
   );

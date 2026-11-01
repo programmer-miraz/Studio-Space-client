@@ -105,7 +105,7 @@ const Cetagory = async () => {
           Browse by Categories
         </h2>
         <Link
-          href="#"
+          href="/Explore_Studios"
           className="flex items-center gap-1 text-sm font-medium text-primary hover:underline"
         >
           View All
