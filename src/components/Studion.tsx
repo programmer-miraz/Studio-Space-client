@@ -10,6 +10,8 @@ import { ArrowRight } from "lucide-react";
 import Studio_Card from "./Feature";
 import { Suspense } from "react";
 import Link from "next/link";
+import Feature_loading from "./loading/Feature_loading";
+
 type Studio = {
     _id: string;
     name: string;
@@ -27,7 +29,7 @@ type Studio = {
 const Feature_studios = () => {
     return (
         <div>
-            <Suspense fallback={<h3>looading</h3>}>
+            <Suspense fallback={<Feature_loading/>}>
                <Feature></Feature>
             </Suspense>
 

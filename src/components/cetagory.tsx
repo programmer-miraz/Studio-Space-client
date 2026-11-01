@@ -16,6 +16,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import CategorySkeleton from "./loading/Category_loading";
 
 type Category = {
   _id?: string;
@@ -84,7 +85,7 @@ const CategoryCard = ({ category }: { category: Category; index: number }) => {
 const SuspenseCetagory = () => {
   return (
     <>
-      <Suspense fallback={<p>Loading.....</p>}>
+      <Suspense fallback={<CategorySkeleton/>}>
         <Cetagory />
       </Suspense>
     </>

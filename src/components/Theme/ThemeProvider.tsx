@@ -10,8 +10,8 @@ export default function ThemeProvider({
   return (
     <NextThemesProvider
       attribute="class"
+       enableSystem={false}
       defaultTheme="light"
-      enableSystem
       disableTransitionOnChange
     >
       {children}
