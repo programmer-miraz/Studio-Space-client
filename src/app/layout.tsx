@@ -5,7 +5,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navber from "@/components/Navber";
 import ThemeProvider from "@/components/Theme/ThemeProvider";
-
+  import { ToastContainer, toast } from 'react-toastify';
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -34,6 +34,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <ThemeProvider>
+               <ToastContainer/>
           {/* Suspense lets usePathname stream in on routes whose
               dynamic params are unknown at build time */}
           <Suspense

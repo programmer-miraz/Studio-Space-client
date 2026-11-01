@@ -39,8 +39,8 @@ const NAV_LINKS = [
 const Navber = () => {
     const router = useRouter()
     const pathname = usePathname();
-    const session = useSession()
-    const userSession = session?.data?.user
+    const { data: session, isPending } = useSession();
+    const userSession = session?.user;
     const handleSignOUt = () => {
         authClient.signOut()
         router.push("/sign-in")
@@ -86,11 +86,11 @@ const Navber = () => {
 
                 {/* Right side actions */}
                 <div className="flex items-center gap-2">
-                    {userSession ? (<div className=" absolute right-68 ">
+                    {userSession ? (<div className=" absolute right-55 ">
                         <ThemeToggle />
                     </div>) : (<> <ThemeToggle /></>)}
 
-                    {userSession ? (<>
+                    {isPending ? (<div className="h-9 w-28 animate-pulse rounded-2xl bg-gray-100 dark:bg-gray-800" />) : userSession ? (<>
 
                         <DropdownMenu>
                             <DropdownMenuTrigger
@@ -125,17 +125,23 @@ const Navber = () => {
 
                                     <DropdownMenuItem className="flex cursor-pointer items-center gap-2.5">
                                         <PlusCircle className="h-4 w-4" />
-                                        <span>Add New Studio</span>
+                                        <Link href="/Add-new-studio">
+                                            <span>Add New Studio</span>
+                                        </Link>
                                     </DropdownMenuItem>
 
                                     <DropdownMenuItem className="flex cursor-pointer items-center gap-2.5">
                                         <LayoutDashboard className="h-4 w-4" />
-                                        <span>My Studio Listings</span>
+                                        <Link href="/Listing-studio">
+                                            <span>My Studio Listings</span>
+                                        </Link>
                                     </DropdownMenuItem>
 
                                     <DropdownMenuItem className="flex cursor-pointer items-center gap-2.5">
                                         <CalendarCheck className="h-4 w-4" />
-                                        <span>My Bookings</span>
+                                        <Link href="/Booking-add">
+                                            <span>My Bookings</span>
+                                        </Link>
                                     </DropdownMenuItem>
 
                                     <DropdownMenuItem className="flex cursor-pointer items-center gap-2.5">

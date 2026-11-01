@@ -31,7 +31,7 @@ const Explore_page = ({ searchParams }: Props) => {
 
 
 const ExploreContent = async ({ searchParams }: Props) => {
-    // 1. Fetch the data from the API
+
     const { category } = await searchParams;
 
     const url = category

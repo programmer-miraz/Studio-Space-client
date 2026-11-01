@@ -18,17 +18,18 @@ type Studio = {
 
 
 const StudioCard = ({ studio }: { studio: Studio }) => {
-    // Fallback values for safely rendering missing data
-    console.log(studio);
+
+    const defaultImage ="https://placehold.co/600x400/e9e5f5/6b5b95?text=Studio+Image"
     return (
         <div className="overflow-hidden rounded-2xl bg-card ring-1 ring-foreground/10 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg">
             {/* Card image — straight from the database */}
             <div className="relative h-40 bg-muted">
                 <Image
-                    src={studio.image}
+                    src={studio.image || defaultImage}
                     alt="images"
                     fill
                     className="object-cover"
+                    
                 />
 
                 {/* Category badge on top of the image */}
@@ -52,7 +53,10 @@ const StudioCard = ({ studio }: { studio: Studio }) => {
 
             <div className="space-y-2 p-4">
                 {/* Studio name */}
-                <h3 className="font-bold text-foreground">  {studio.title.slice(0, 25)} {studio.title.length > 25 && "..."} </h3>
+                <h3 className="font-bold text-foreground">
+                    {studio.title?.slice(0, 25) || "Untitled Studio"}
+                    {(studio.title?.length ?? 0) > 25 && "..."}
+                </h3>
 
                 {/* Star rating + review count */}
                 <p className="flex items-center gap-1 text-sm">
