@@ -20,6 +20,7 @@ type Studio = {
     reviews: number;
     location: string;
     totalReviews: string;
+    hourlyRate:string
     title: string
     securityDeposit: string;
     image: string; // <- the image that is stored in the database for this card

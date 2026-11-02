@@ -9,10 +9,6 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "cn";
 import { useRouter } from "next/navigation";
 
-// ---------- Routes (change here if folder names change) ----------
-
-
-// ---------- Studio data (same loose shape as MongoDB, simple) ----------
 type MyStudio = {
     _id: string;
     title?: string;
@@ -36,6 +32,7 @@ type MyStudio = {
 
 // ---------- Small piece: one studio card ----------
 function StudioCard({ studio }: { studio: MyStudio; }) {
+    
     const router = useRouter()
     const { data: session } = useSession()
     const userSession = session?.user
@@ -113,7 +110,7 @@ function StudioCard({ studio }: { studio: MyStudio; }) {
 
                     <div className="flex items-center gap-2">
                         <Link
-                            href="#"
+                             href={`/my-listings/${studio._id}`}
                             className={cn(buttonVariants({ variant: "outline", size: "sm" }), "rounded-full px-4")}
                         >
                             <Pencil />

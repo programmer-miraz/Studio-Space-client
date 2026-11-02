@@ -3,7 +3,7 @@ import React from 'react';
 const Loading = () => {
     return (
         <div>
-            <section className="mx-auto max-w-5xl mt-10 px-4 py-8">
+            <section className="mx-auto max-w-5xl mt-100 px-4 py-8">
                 {/* Header skeleton */}
                 <div className="flex items-center justify-between">
                     <div className="h-6 w-48 animate-pulse rounded-md bg-muted" />
@@ -17,7 +17,7 @@ const Loading = () => {
                             key={index}
                             className="overflow-hidden rounded-2xl bg-card ring-1 ring-foreground/10 shadow-sm"
                         >
-                            <div className="relative h-40 animate-pulse bg-muted" />
+                            <div className="relative h-40 mt-3 mb-3 animate-pulse bg-muted" />
                             <div className="space-y-2 p-4">
                                 <div className="h-5 w-3/4 animate-pulse rounded-md bg-muted" />
                                 <div className="h-4 w-1/2 animate-pulse rounded-md bg-muted" />

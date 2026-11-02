@@ -12,6 +12,7 @@ type Studio = {
   name: string;
   category: string;
   rating: number;
+  hourlyRate:string
   reviews: number;
   location: string;
   totalReviews: string;
@@ -57,9 +58,9 @@ function Studio_Card({ studio }: { studio: Studio }) {
       </div>
 
       {/* Bottom: studio info */}
-      <CardContent className="space-y-2">
+      <CardContent className="space-y-2  mt-3">
         {/* Name */}
-        <h3 className="font-semibold text-foreground">{studio.name}</h3>
+        <h3 className="font-semibold text-foreground">{studio.title}</h3>
 
         {/* Star rating + review count */}
         <p className="flex items-center gap-1 text-sm">
@@ -79,7 +80,7 @@ function Studio_Card({ studio }: { studio: Studio }) {
         {/* Price + View Details button */}
         <div className="flex items-center justify-between pt-2 pb-1">
           <p className="font-bold text-foreground">
-            ${studio.securityDeposit}
+            ${studio.hourlyRate}
             <span className="ml-1 text-sm font-normal text-muted-foreground">
               / hr
             </span>

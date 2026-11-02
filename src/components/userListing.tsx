@@ -6,22 +6,14 @@ import StudioCard from "./myListing";
 type MyStudio = {
   _id: string;
   title?: string;
-  name?: string;
   category?: string;
   image?: string;
-  location?: string;
   hourlyRate?: number | string;
-  price?: number | string;
-  securityDeposit?: number | string;
-  rating?: number | string;
   reviews?: number | string;
-  totalReviews?: number | string;
   capacity?: number | string;
-  maxCapacity?: number | string;
-  description?: string;
   overview?: string;
   amenities?: string[] | string;
-  features?: string[] | string;
+
 };
 
 const UserListing = async ({ userEmail }: { userEmail: string }) => {
