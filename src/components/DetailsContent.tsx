@@ -8,6 +8,8 @@ import {
   Star,
 } from "lucide-react";
 import { StudioDetails } from "@/type";
+import Booking from "./booking/Booking";
+import Booking_Now from "./booking/Booking";
 
 
 
@@ -184,14 +186,7 @@ const DetailsContent = ({ studio }: { studio: StudioDetails}) => {
           </div>
 
           {/* Booking button */}
-          <button
-            type="button"
-            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-primary py-3 font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
-          >
-            <Calendar className="size-4" />
-            Book Workspace Now
-          </button>
-
+         <Booking_Now studio={studio}></Booking_Now>
           {/* Small helper note */}
           <p className="text-center text-xs text-muted-foreground">
             You won&apos;t be charged immediately. Your reservation will enter

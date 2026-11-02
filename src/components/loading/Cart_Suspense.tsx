@@ -3,7 +3,7 @@ import React from 'react';
 const Loading = () => {
     return (
         <div>
-            <section className="mx-auto max-w-5xl mt-100 px-4 py-8">
+            <section className="mx-auto max-w-6xl mt-6 px-4 py-8">
                 {/* Header skeleton */}
                 <div className="flex items-center justify-between">
                     <div className="h-6 w-48 animate-pulse rounded-md bg-muted" />
