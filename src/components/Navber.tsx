@@ -132,7 +132,7 @@ const Navber = () => {
 
                                     <DropdownMenuItem className="flex cursor-pointer items-center gap-2.5">
                                         <LayoutDashboard className="h-4 w-4" />
-                                        <Link href="/Listing-studio">
+                                        <Link href="/my-listings">
                                             <span>My Studio Listings</span>
                                         </Link>
                                     </DropdownMenuItem>

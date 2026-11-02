@@ -29,68 +29,49 @@ const CATEGORY_OPTIONS = [
   "Content Creator Studio",
 ];
 
-// One checkbox = one string. Adding an option is just adding a string.
-const CAMERA_OPTIONS = [
-  "DSLR Cameras",
-  "Cinema Cameras",
-  "Mirrorless Cameras",
-  "GoPro / Action Cams",
-  "Camcorders",
-  "360° Cameras",
-];
-
-const GEAR_OPTIONS = [
-  "Tripods & Stabilizers",
-  "Softbox Lighting",
-  "Ring Lights",
-  "Green Screen",
-  "Audio Recorders",
-  "Professional Microphones",
-];
-
-const STUDIO_OPTIONS = [
-  "Props & Backdrops",
-  "Makeup & Changing Room",
-  "Wi-Fi & Power Backup",
-  "Air Conditioning",
-
+// One amenity = one string. Adding an option is just adding a string.
+// (These match the "Included Amenities & Production Gear" design)
+const AMENITY_OPTIONS = [
+  "Cyclorama Wall",
+  "Soundproof Vocal Booth",
+  "Neve / SSL Preamps",
+  "Drive-In Loading Bay",
+  "Client Lounge with Espresso Bar",
+  "Green Screen / Blue Screen Drops",
+  "Electric Ceramic Kiln & Wheels",
+  "4K DMX Lighting Grid",
+  "Acoustic Treatment Slat Walls",
+  "Shure SM7B Dynamic Mic Setup",
+  "Hair & Makeup Vanity Station",
+  "High-Speed Gigabit WiFi",
+  "Heavy Rigging Trusses (2-Ton)",
+  "Industrial Screen Printing Press",
 ];
 
 
 
 
 
-// Reusable checkbox list block (used for every group below)
-function OptionGroup({ title, options }: { title: string; options: string[] }) {
+// One checkbox row. "name" is the text, e.g. "Cyclorama Wall"
+function CheckboxOption({
+  name,
+  isChecked,
+  onChange,
+}: {
+  name: string;
+  isChecked: boolean;
+  onChange: () => void;
+}) {
   return (
-    <div>
-      <h3 className="mb-3 text-sm font-semibold text-foreground">{title}</h3>
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        {options.map((option) => (
-          <CheckboxOption key={option} name={option} />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// One checkbox row. "name" is the text, e.g. "DSLR Cameras"
-function CheckboxOption({ name }: { name: string }) {
-  const [isChecked, setIsChecked] = useState(false);
-
-  return (
-    <label className="flex cursor-pointer items-center gap-2.5 rounded-lg border border-transparent px-1 py-1 text-sm transition-colors hover:border-border hover:bg-muted/50 hover:font-medium">
+    <label className="flex cursor-pointer items-center gap-3 rounded-lg px-1 py-1.5 text-sm transition-colors hover:bg-muted/40">
+      {/* Amber check style like the design (instead of purple) */}
       <Checkbox
         checked={isChecked}
-        onCheckedChange={(checked: boolean) => setIsChecked(checked === true)}
+        onCheckedChange={onChange}
         aria-label={name}
+        className="data-checked:border-amber-400 data-checked:bg-transparent data-checked:text-amber-500"
       />
-      <input
-        type="hidden"
-        name="amenities"
-        value={name}
-      />
-      <span className="text-muted-foreground">{name}</span>
+      <span className="text-foreground">{name}</span>
     </label>
   );
 }
@@ -106,17 +87,33 @@ const Add_studio_page = () => {
     overview: "",
   });
 
+  // Selected amenities live here as a simple array of strings
+  const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
+
+  // Add the amenity if missing, remove it if already present
+  const toggleAmenity = (name: string) => {
+    setSelectedAmenities((prev) =>
+      prev.includes(name)
+        ? prev.filter((item) => item !== name)
+        : [...prev, name]
+    );
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const userData = Object.fromEntries(formData.entries()) as { workingSince: string, hourlyCost: string, image: string, amenities: string, overview: string }
 
+    const { amenities, ...restUserData } = userData;
+
     const studioData = {
-      ...userData,
-      ownerName: userSession?.name,
-      ownerEmail: userSession?.email,
-      ownerImage: userSession?.image,
+      ...restUserData,
+      amenities: JSON.parse(amenities) as string[],
+      name: userSession?.name,
+      email: userSession?.email,
     };
+
+
 
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/add_studio`, {
       method: "POST",
@@ -171,7 +168,7 @@ const Add_studio_page = () => {
                   </SelectItem>
                 ))}
               </SelectContent>
-              <input type="hidden" name="who" value={form.who} />
+              <input type="hidden" name="title" value={form.who} />
             </Select>
           </div>
 
@@ -186,7 +183,7 @@ const Add_studio_page = () => {
               }
             >
               <SelectTrigger id="category" className="w-full">
-                <SelectValue>{"Select a category"}</SelectValue>
+                <SelectValue>{form.category || "Select a category"}</SelectValue>
               </SelectTrigger>
               <SelectContent>
                 {CATEGORY_OPTIONS.map((option) => (
@@ -195,7 +192,7 @@ const Add_studio_page = () => {
                   </SelectItem>
                 ))}
               </SelectContent>
-              <input type="hidden" name="who" value={form.category} />
+              <input type="hidden" name="category" value={form.category} />
             </Select>
           </div>
 
@@ -216,7 +213,17 @@ const Add_studio_page = () => {
               id="hourly-cost"
               type="number"
               placeholder="e.g. 50"
-              name="hourlyCost"
+              name="hourlyRate"
+
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="hourly-cost">Address</Label>
+            <Input
+              id="address"
+              type="address"
+              placeholder="address"
+              name="location"
 
             />
           </div>
@@ -236,22 +243,30 @@ const Add_studio_page = () => {
 
         </div>
 
-        {/* ---------- Section 2: facility & gear checkboxes ---------- */}
+        {/* ---------- Section 2: included amenities (like the design) ---------- */}
         <div>
-          <h2 className="text-lg font-semibold text-foreground">
-            The Facility &amp; Production Gear
+          <h2 className="mb-3 text-sm font-semibold text-foreground">
+            Included Amenities &amp; Production Gear
           </h2>
-          <p className="mt-1 mb-5 text-sm text-muted-foreground">
-            Select everything that is available in your studio.
-          </p>
 
-          <div className="space-y-6 rounded-2xl border border-border p-5">
-            <div className="grid gap-6 md:grid-cols-3">
-              <OptionGroup title="Camera Options" options={CAMERA_OPTIONS} />
-              <OptionGroup title="Gear Options" options={GEAR_OPTIONS} />
-              <OptionGroup title="Studio Details" options={STUDIO_OPTIONS} />
+          <div className="rounded-xl border border-border p-5">
+            <div className="grid grid-cols-1 gap-x-10 gap-y-1 sm:grid-cols-2">
+              {AMENITY_OPTIONS.map((name) => (
+                <CheckboxOption
+                  key={name}
+                  name={name}
+                  isChecked={selectedAmenities.includes(name)}
+                  onChange={() => toggleAmenity(name)}
+                />
+              ))}
             </div>
 
+            {/* One hidden input carries the selected amenities to FormData */}
+            <input
+              type="hidden"
+              name="amenities"
+              value={JSON.stringify(selectedAmenities)}
+            />
           </div>
         </div>
 
@@ -285,7 +300,7 @@ const Add_studio_page = () => {
           <div className="flex items-center gap-4 rounded-2xl border border-border bg-card p-4">
             <Avatar size="lg">
               <AvatarImage src={userSession?.image ?? undefined} alt={userSession?.name} />
-              <AvatarFallback>{userSession?.name.slice(0, 2).toUpperCase()}</AvatarFallback>
+              <AvatarFallback>{userSession?.name?.slice(0, 2).toUpperCase() ?? "ST"}</AvatarFallback>
             </Avatar>
             <div className="flex-1">
               <p className="font-semibold text-foreground">{userSession?.name}</p>

@@ -10,6 +10,7 @@ type Studio = {
     category: string;
     rating: number;
     reviews: number;
+        hourlyRate:string
     location: string;
     totalReviews: string;
     title: string

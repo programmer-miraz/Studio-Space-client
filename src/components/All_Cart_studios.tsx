@@ -11,6 +11,7 @@ type Studio = {
     reviews: number;
     location: string;
     title: string
+    hourlyRate:string
     totalReviews: string;
     securityDeposit: string;
     image: string; // <- the image that is stored in the database for this card
@@ -18,14 +19,12 @@ type Studio = {
 
 
 const StudioCard = ({ studio }: { studio: Studio }) => {
-
-    const defaultImage ="https://placehold.co/600x400/e9e5f5/6b5b95?text=Studio+Image"
     return (
         <div className="overflow-hidden rounded-2xl bg-card ring-1 ring-foreground/10 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg">
             {/* Card image — straight from the database */}
             <div className="relative h-40 bg-muted">
                 <Image
-                    src={studio.image || defaultImage}
+                    src={studio.image}
                     alt="images"
                     fill
                     className="object-cover"
@@ -76,7 +75,7 @@ const StudioCard = ({ studio }: { studio: Studio }) => {
             <div className="border-t border-border">
                 <div className="flex items-center justify-between p-4">
                     <p className="font-bold text-foreground">
-                        ${studio.securityDeposit}
+                        ${studio.hourlyRate}
                         <span className="ml-1 text-sm font-normal text-muted-foreground">
                             / hr
                         </span>
