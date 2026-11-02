@@ -1,11 +1,7 @@
 "use client";
-import { useState } from "react";
 import { toast } from "react-toastify";
 import {
     Calendar,
-    Clock,
-    DatabaseArrowDown,
-    Users,
     Wallet,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -31,20 +27,17 @@ const Booking_Now = ({ studio }: { studio: StudioDetails }) => {
     const user = session?.user;
     const router = useRouter()
 
-
-
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         const bookingInfo = Object.fromEntries(formData.entries());
 
-
-
-        const { title, ...userStudio } = studio;
+        const { overview, amenities, gallery, _id, title, ...userStudio } = studio;
         try {
             const bookingData = {
                 name: user?.name,
                 email: user?.email,
+                studioId: _id,
                 ...userStudio,
                 ...bookingInfo,
 
@@ -57,13 +50,14 @@ const Booking_Now = ({ studio }: { studio: StudioDetails }) => {
                 },
                 body: JSON.stringify(bookingData),
             });
+            const data = await res.json()
 
             if (res.ok) {
-                toast.success("Add successfull!")
+                toast.success("Booking request submitted!");
                 router.push("/Booking-add")
             }
             else {
-                toast.error("Already added")
+                toast.error(data.message || "Booking failed!");
             }
 
         } catch {
@@ -115,7 +109,26 @@ const Booking_Now = ({ studio }: { studio: StudioDetails }) => {
                                 required
                             />
                         </Field>
+                        <Field>
+                            <Label htmlFor="startTime">Start Time</Label>
+                            <Input
+                                id="startTime"
+                                name="startTime"
+                                type="time"
+                                required
+                            />
+                        </Field>
 
+                        {/* 4. End Time */}
+                        <Field>
+                            <Label htmlFor="endTime">End Time</Label>
+                            <Input
+                                id="endTime"
+                                name="endTime"
+                                type="time"
+                                required
+                            />
+                        </Field>
 
                         {/* 5. Number of Guests */}
                         <Field>
@@ -123,8 +136,10 @@ const Booking_Now = ({ studio }: { studio: StudioDetails }) => {
                             <Input
                                 id="guests"
                                 type="number"
+                                name="guests"
                                 min={1}
-                                placeholder="e.g. 10"
+                                max={studio.maxCapacity}
+                                placeholder="guests id"
                                 required
                             />
                         </Field>
