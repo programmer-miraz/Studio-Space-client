@@ -189,8 +189,7 @@ export default function Sign_in() {
                 {/* Sign In button (purple gradient) */}
                 <button
                     type="submit"
-                    className="flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#7C3AED] to-[#9333EA] py-3 font-bold text-white transition-opacity hover:opacity-90"
-                >
+                    className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#7C3AED] to-[#9333EA] py-3 font-bold text-white transition-opacity hover:opacity-90">
                     Sign In
                     <ArrowRight className="size-4" />
                 </button>

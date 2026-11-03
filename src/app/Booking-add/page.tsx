@@ -1,7 +1,6 @@
 
 import Studio_Booking from "@/components/booking/Studio_Booking";
 import { auth } from "@/lib/auth";
-
 import { headers } from "next/headers";
 import { Suspense } from "react";
 interface StudioDetails {
@@ -11,21 +10,22 @@ interface StudioDetails {
     rating: number;
     reviews: number;
     location: string;
-    status:string
+    status: string
     title: string
-      bookingDate: string
+    bookingDate: string
     hourlyRate: string
     totalReviews: string;
     securityDeposit: string;
     image: string;
 }
 
-async function CarouselSize() {
+async function  CarouselSize() {
+  
     const session = await auth.api.getSession({
         headers: await headers(),
     });
     const user = session?.user;
-    console.log(user);
+
 
     let bookings: StudioDetails[] = [];
 
@@ -39,6 +39,7 @@ async function CarouselSize() {
         bookings = await res.json();
     } catch (error) {
         console.error("Failed to load bookings:", error);
+
     }
 
     if (!bookings.length) {
@@ -64,7 +65,7 @@ export default function Page() {
             <div className="mx-auto max-w-6xl px-4 lg:px-6">
                 <h1 className="text-4xl text-foreground lg:text-5xl">My Studion booking</h1>
                 <p className="mt-3 text-sm text-muted-foreground">
-                  Track reservation statues,cancellation requests and shot times
+                    Track reservation statues,cancellation requests and shot times
                 </p>
                 <div className="mt-10">
                     <Suspense fallback={<p className="py-10 text-center">Loading bookings...</p>}>

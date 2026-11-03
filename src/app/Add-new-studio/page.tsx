@@ -17,6 +17,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useSession } from "@/lib/auth-client";
 import { toast } from "react-toastify";
+import client_getToken from "@/lib/Token/client_get_token";
 
 // ---------- Simple option lists (easy to edit later) ----------
 const WHO_OPTIONS = ["Studio Owner", "Photographer", "Videographer", "Content Creator"];
@@ -29,8 +30,7 @@ const CATEGORY_OPTIONS = [
   "Content Creator Studio",
 ];
 
-// One amenity = one string. Adding an option is just adding a string.
-// (These match the "Included Amenities & Production Gear" design)
+
 const AMENITY_OPTIONS = [
   "Cyclorama Wall",
   "Soundproof Vocal Booth",
@@ -112,17 +112,22 @@ const Add_studio_page = () => {
       name: userSession?.name,
       email: userSession?.email,
     };
+    
 
-
-
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/add_studio`, {
+    const token = await client_getToken()
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/add-studio`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        // authorization: `Berara ${token}`
+        authorization: `Berara ${token}`
       },
       body: JSON.stringify(studioData),
     })
+
+    if (!res.ok) {
+      toast.error("Failed to add studio. Please try again.");
+
+    }
     const jsonData = await res.json()
     if (jsonData.acknowledged === true) {
       toast.success("Studio added successfully!");
@@ -130,9 +135,7 @@ const Add_studio_page = () => {
     if (jsonData.acknowledged === false) {
       toast.error("Failed to add studio. Please try again.");
 
-
     }
-
 
   };
 

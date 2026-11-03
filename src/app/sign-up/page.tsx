@@ -12,6 +12,8 @@ import {
 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
+import { redirect, useSearchParams } from "next/navigation";
+import { toast } from "react-toastify";
 
 export default function Sign_in() {
 
@@ -35,6 +37,8 @@ export default function Sign_in() {
 
         return errors;
     };
+    const searchParams = useSearchParams();
+    const callbackUrl = searchParams.get("callbackUrl") || "/";
 
     /* STEP 3: sign-in handler (same logic as before — validate first,
        then send the request with better-auth) */
@@ -56,43 +60,47 @@ export default function Sign_in() {
 
         const { data, error } = await authClient.signUp.email({
             ...user,
-            callbackURL: "/",
-
+            callbackURL: callbackUrl,
+            
         });
         if (data) {
-            console.log(data);
-
-
+            toast.success("Account created successfully!");
+           
         }
+
         if (error) {
-            console.log(error);
+            toast.error(error.message || "Failed to create account!");
         }
     }
 
     const handleGoogle = async () => {
         const { data, error } = await authClient.signIn.social({
             provider: "google",
-            callbackURL: "/"
+            callbackURL: callbackUrl,
 
         });
 
         if (data) {
-            console.log(data);
+            toast.success("Account created successfully!");
         }
+
         if (error) {
-            console.log(error);
+            toast.error(error.message || "Failed to create account!");
         }
 
     }
     const handleGithub = async () => {
         const { data, error } = await authClient.signIn.social({
-            provider: "github"
+            provider: "github",
+            callbackURL: callbackUrl,
         })
+
         if (data) {
-            console.log(data);
+            toast.success("Account created successfully!");
         }
+
         if (error) {
-            console.log(error);
+            toast.error(error.message || "Failed to create account!");
         }
 
     }
@@ -144,7 +152,7 @@ export default function Sign_in() {
                         image url
                     </label>
                     <div className="relative">
-                              <ImageIcon className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                        <ImageIcon className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                         <input
                             id="image"
                             name="url"
@@ -223,14 +231,13 @@ export default function Sign_in() {
                 {/* Sign In button (purple gradient) */}
                 <button
                     type="submit"
-                    className="flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#7C3AED] to-[#9333EA] py-3 font-bold text-white transition-opacity hover:opacity-90"
+                    className="flex w-full items-center cursor-pointer justify-center gap-2 rounded-full bg-gradient-to-r from-[#7C3AED] to-[#9333EA] py-3 font-bold text-white transition-opacity hover:opacity-90"
                 >
                     Sign up
                     <ArrowRight className="size-4" />
                 </button>
 
-                {/* OR CONTINUE WITH separator */}
-                <div className="flex items-center gap-3">
+                <div className="flex items-center  gap-3">
                     <span className="h-px flex-1 bg-border" />
                     <span className="text-xs font-medium tracking-widest text-muted-foreground">
                         OR CONTINUE WITH

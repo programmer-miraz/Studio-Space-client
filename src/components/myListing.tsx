@@ -8,6 +8,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 
 import { cn } from "cn";
 import { useRouter } from "next/navigation";
+import client_getToken from "@/lib/Token/client_get_token";
 
 type MyStudio = {
     _id: string;
@@ -32,13 +33,20 @@ type MyStudio = {
 
 // ---------- Small piece: one studio card ----------
 function StudioCard({ studio }: { studio: MyStudio; }) {
-    
+
     const router = useRouter()
     const { data: session } = useSession()
     const userSession = session?.user
-    console.log(userSession);
+
     const handleDelete = async () => {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/my-listing/${encodeURIComponent(userSession?.email ?? "")}`, { method: "DELETE" })
+        const token = await client_getToken()
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/my-listing/${encodeURIComponent(userSession?.email ?? "")}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                authorization: `Berara ${token}`
+            },
+        })
         const data = await res.json()
         console.log(data);
 
@@ -110,7 +118,7 @@ function StudioCard({ studio }: { studio: MyStudio; }) {
 
                     <div className="flex items-center gap-2">
                         <Link
-                             href={`/my-listings/${studio._id}`}
+                            href={`/my-listings/${studio._id}`}
                             className={cn(buttonVariants({ variant: "outline", size: "sm" }), "rounded-full px-4")}
                         >
                             <Pencil />

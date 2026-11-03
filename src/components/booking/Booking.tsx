@@ -21,6 +21,7 @@ import { Label } from "@/components/ui/label";
 import { authClient } from "@/lib/auth-client";
 import { StudioDetails } from "@/type";
 import { useRouter } from "next/navigation";
+import client_getToken from "@/lib/Token/client_get_token";
 
 const Booking_Now = ({ studio }: { studio: StudioDetails }) => {
     const { data: session } = authClient.useSession();
@@ -42,11 +43,14 @@ const Booking_Now = ({ studio }: { studio: StudioDetails }) => {
                 ...bookingInfo,
 
             };
+            const token = await client_getToken()
 
             const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/booking`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                   authorization: `Berara ${token}`
+
                 },
                 body: JSON.stringify(bookingData),
             });
@@ -59,9 +63,10 @@ const Booking_Now = ({ studio }: { studio: StudioDetails }) => {
             else {
                 toast.error(data.message || "Booking failed!");
             }
-
+            
         } catch {
-            toast.error("Failed to save booking. Please try again.");
+            
+            router.push("/sign-in")
         }
     };
 

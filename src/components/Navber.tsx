@@ -32,8 +32,8 @@ import {
 const NAV_LINKS = [
     { name: "Home", url: "/", },
     { name: "Explore Studios", url: "/Explore_Studios" },
-    { name: "How It Works", url: "#" },
-    { name: "About Us", url: "#" },
+    { name: "How It Works", url: "/#how-it-works" },
+    { name: "About Us", url: "/#about" },
 ];
 
 const Navber = () => {
