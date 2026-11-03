@@ -1,5 +1,6 @@
 "use client"
-import { Aperture, CalendarCheck, ChevronDown, Heart, LayoutDashboard, LogOutIcon, PlusCircle } from "lucide-react";
+import { useState } from "react";
+import { Aperture, CalendarCheck, ChevronDown, Heart, LayoutDashboard, LogOutIcon, Menu, PlusCircle, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ThemeToggle from "./Theme/ThemeToggle";
 import Link from "next/link";
@@ -21,13 +22,6 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 
-
-
-
-
-
-
-
 // Simple array so adding/removing a link is easy
 const NAV_LINKS = [
     { name: "Home", url: "/", },
@@ -39,17 +33,21 @@ const NAV_LINKS = [
 const Navber = () => {
     const router = useRouter()
     const pathname = usePathname();
-    const { data: session, isPending } = useSession();
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const { data: session, isPending, refetch } = useSession();
     const userSession = session?.user;
     const handleSignOUt = () => {
         authClient.signOut()
+        localStorage.clear();
         router.push("/sign-in")
+        refetch()
+
     }
 
 
     return (
         <header className="border-b border-border bg-white dark:bg-card">
-            <div className="mx-auto flex h-16 max-w-6xl  items-center justify-between px-4">
+            <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
                 {/* Logo */}
                 < Link href="/" className="flex items-center gap-2">
                     <span className="flex size-9 items-center justify-center rounded-lg bg-primary">
@@ -86,9 +84,7 @@ const Navber = () => {
 
                 {/* Right side actions */}
                 <div className="flex items-center gap-2">
-                    {userSession ? (<div className=" absolute right-55 ">
-                        <ThemeToggle />
-                    </div>) : (<> <ThemeToggle /></>)}
+                    <ThemeToggle />
 
                     {isPending ? (<div className="h-9 w-28 animate-pulse rounded-2xl bg-gray-100 dark:bg-gray-800" />) : userSession ? (<>
 
@@ -158,18 +154,72 @@ const Navber = () => {
                         </DropdownMenu>
 
 
-                    </>) : (<div>
+                    </>) : (<div className="hidden items-center gap-2 sm:flex">
                         <Link href="/sign-in">
-                            <Button variant="outline" className="rounded-full px-5">
+                            <Button variant="outline" className="rounded-full cursor-pointer px-4 text-sm sm:px-5">
                                 Sign In
                             </Button>
                         </Link>
                         <Link href="/sign-up">
-                            <Button className="rounded-full px-5">Sign Up</Button>
+                            <Button className="rounded-full cursor-pointer px-4 text-sm sm:px-5">Sign Up</Button>
                         </Link>
                     </div>)}
+
+                    {/* Mobile hamburger (opens the stacked nav panel below) */}
+                    <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        aria-label={isMobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+                        aria-expanded={isMobileMenuOpen}
+                        onClick={() => setIsMobileMenuOpen((prev) => !prev)}
+                        className="cursor-pointer text-foreground md:hidden"
+                    >
+                        {isMobileMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+                    </Button>
                 </div>
             </div>
+
+            {/* Mobile navigation panel (md and below only) */}
+            {isMobileMenuOpen && (
+                <nav className="border-t border-border bg-white px-4 py-3 md:hidden dark:bg-card">
+                    <ul className="space-y-1">
+                        {NAV_LINKS.map((link) => {
+                            const isActive = pathname === link.url;
+
+                            return (
+                                <li key={link.name}>
+                                    <Link
+                                        href={link.url}
+                                        onClick={() => setIsMobileMenuOpen(false)}
+                                        className={
+                                            isActive
+                                                ? "block rounded-lg border-b-2 border-primary px-3 py-2 font-medium text-primary"
+                                                : "block rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-primary"
+                                        }
+                                    >
+                                        {link.name}
+                                    </Link>
+                                </li>
+                            );
+                        })}
+                    </ul>
+
+                    {/* Mobile-only sign in / sign up shortcuts */}
+                    {!userSession && (
+                        <div className="mt-3 flex items-center gap-2 border-t border-border pt-3 sm:hidden">
+                            <Link href="/sign-in" className="flex-1" onClick={() => setIsMobileMenuOpen(false)}>
+                                <Button variant="outline" className="w-full cursor-pointer rounded-full">
+                                    Sign In
+                                </Button>
+                            </Link>
+                            <Link href="/sign-up" className="flex-1" onClick={() => setIsMobileMenuOpen(false)}>
+                                <Button className="w-full cursor-pointer rounded-full">Sign Up</Button>
+                            </Link>
+                        </div>
+                    )}
+                </nav>
+            )}
         </header>
     );
 };

@@ -22,7 +22,9 @@ import { auth } from "@/lib/auth";
 import type { User } from "better-auth";
 type MyStudio = {
     _id: string;
+    securityDeposit?: string
     title?: string;
+    maxCapacity?: string
     category?: string;
     image?: string;
     hourlyRate?: number | string;
@@ -94,6 +96,7 @@ function CheckboxOption({
 }
 
 const Edit_page = ({ studio, userSession }: { studio: MyStudio, userSession: User }) => {
+    console.log(studio);
     const router = useRouter()
     const [form, setForm] = useState({
         who: studio.title || "",
@@ -151,7 +154,7 @@ const Edit_page = ({ studio, userSession }: { studio: MyStudio, userSession: Use
     };
 
     return (
-        <section className="mx-auto w-2xl border rounded-3xl my-5  border-gray-300 max-w-4xl px-5 py-11">
+        <section className="mx-auto w-full max-w-2xl rounded-3xl my-5 border border-gray-300 px-5 py-11">
 
             <Link
                 href="/my-listings"
@@ -173,7 +176,7 @@ const Edit_page = ({ studio, userSession }: { studio: MyStudio, userSession: Use
                 <div className="grid gap-6 md:grid-cols-2">
                     <div className="space-y-2">
                         <Label htmlFor="who">
-                            Who I Am <span className="text-destructive">*</span>
+                            Studio title<span className="text-destructive">*</span>
                         </Label>
                         <Select
                             value={form.who}
@@ -181,7 +184,7 @@ const Edit_page = ({ studio, userSession }: { studio: MyStudio, userSession: Use
                                 setForm((prev) => ({ ...prev, who: value ?? "" }))
                             }>
                             <SelectTrigger id="who" className="w-full">
-                                <SelectValue>{form.who}</SelectValue>
+                                <SelectValue>{form.who || "Studio title"}</SelectValue>
                             </SelectTrigger>
                             <SelectContent>
                                 {WHO_OPTIONS.map((option) => (
@@ -242,6 +245,36 @@ const Edit_page = ({ studio, userSession }: { studio: MyStudio, userSession: Use
 
                         />
                     </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="security-deposit">
+                            Security Deposit ($)
+                        </Label>
+                        <Input
+                            id="security-deposit"
+                            type="number"
+                            name="securityDeposit"
+                            defaultValue={studio.securityDeposit}
+                            placeholder="e.g. 100"
+                            min="0"
+                            required
+                        />
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label htmlFor="max-capacity">
+                            Max Capacity
+                        </Label>
+                        <Input
+                            id="max-capacity"
+                            type="number"
+                            name="maxCapacity"
+                                defaultValue={studio.maxCapacity}
+                            placeholder="e.g. 20 people"
+                            min="1"
+                            required
+                        />
+                    </div>
+
                     <div className="space-y-2">
                         <Label htmlFor="hourly-cost">Address</Label>
                         <Input

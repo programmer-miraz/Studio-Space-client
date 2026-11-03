@@ -2,7 +2,7 @@ import React from 'react';
 
 const Details_loading = () => {
     return (
-        <section className="mx-auto max-w-7xl px-4 py-6">
+        <section className="mx-auto max-w-6xl px-4 py-6">
             {/* Hero image skeleton */}
             <div className="h-64 animate-pulse rounded-2xl bg-muted md:h-[26rem]" />
 

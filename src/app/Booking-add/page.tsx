@@ -63,8 +63,8 @@ export default function Page() {
     return (
         <main className="min-h-screen bg-white py-10 lg:py-16">
             <div className="mx-auto max-w-6xl px-4 lg:px-6">
-                <h1 className="text-4xl text-foreground lg:text-5xl">My Studion booking</h1>
-                <p className="mt-3 text-sm text-muted-foreground">
+                <h1 className="text-3xl text-foreground sm:text-4xl lg:text-5xl">My Studion booking</h1>
+                <p className="mt-3 max-w-lg text-xs text-muted-foreground sm:text-sm">
                     Track reservation statues,cancellation requests and shot times
                 </p>
                 <div className="mt-10">

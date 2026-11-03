@@ -20,7 +20,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { authClient } from "@/lib/auth-client";
 import { StudioDetails } from "@/type";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import client_getToken from "@/lib/Token/client_get_token";
 
 const Booking_Now = ({ studio }: { studio: StudioDetails }) => {
@@ -28,45 +28,63 @@ const Booking_Now = ({ studio }: { studio: StudioDetails }) => {
     const user = session?.user;
     const router = useRouter()
 
+    const pathname = usePathname();
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         const bookingInfo = Object.fromEntries(formData.entries());
 
         const { overview, amenities, gallery, _id, title, ...userStudio } = studio;
-        try {
-            const bookingData = {
-                name: user?.name,
-                email: user?.email,
-                studioId: _id,
-                ...userStudio,
-                ...bookingInfo,
 
-            };
-            const token = await client_getToken()
+        const bookingData = {
+            name: user?.name,
+            email: user?.email,
+            studioId: _id,
+            ...userStudio,
+            ...bookingInfo,
+
+        };
+        const token = await client_getToken()
+        try {
+            // আগে token check করবে
+            if (!token) {
+                toast.error("Please login first to book a studio!");
+                router.push(`/sign-in?callbackUrl=${encodeURIComponent(pathname)}`);
+                return;
+            }
 
             const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/booking`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                   authorization: `Berara ${token}`
-
+                    authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify(bookingData),
             });
-            const data = await res.json()
 
-            if (res.ok) {
-                toast.success("Booking request submitted!");
-                router.push("/Booking-add")
+            const data = await res.json();
+
+            if (res.status === 409) {
+                toast.error(data.message || "This studio is already booked for this time!");
+                return;
             }
-            else {
+
+            if (res.status === 401) {
+                toast.error("Your session has expired. Please login again!");
+                router.push("/sign-in");
+                return;
+            }
+
+            if (!res.ok) {
                 toast.error(data.message || "Booking failed!");
+                return;
             }
-            
+
+            toast.success("Booking request submitted!");
+            router.push("/Booking-add");
+
         } catch {
-            
-            router.push("/sign-in")
+            toast.error("Something went wrong. Please try again!");
         }
     };
 

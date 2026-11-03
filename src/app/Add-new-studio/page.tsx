@@ -112,7 +112,7 @@ const Add_studio_page = () => {
       name: userSession?.name,
       email: userSession?.email,
     };
-    
+
 
     const token = await client_getToken()
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/add-studio`, {
@@ -140,7 +140,7 @@ const Add_studio_page = () => {
   };
 
   return (
-    <section className="mx-auto w-2xl border rounded-3xl my-5  border-gray-300 max-w-4xl px-5 py-11">
+    <section className="mx-auto w-full max-w-2xl rounded-3xl my-5 border border-gray-300 px-5 py-11">
       {/* Page header */}
       <h1 className="text-2xl font-bold text-foreground md:text-3xl">
         Add New Studio
@@ -154,7 +154,7 @@ const Add_studio_page = () => {
         <div className="grid gap-6 md:grid-cols-2">
           <div className="space-y-2">
             <Label htmlFor="who">
-              Who I Am <span className="text-destructive">*</span>
+              Studio Title <span className="text-destructive">*</span>
             </Label>
             <Select
               value={form.who}
@@ -220,6 +220,35 @@ const Add_studio_page = () => {
 
             />
           </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="security-deposit">
+              Security Deposit ($)
+            </Label>
+            <Input
+              id="security-deposit"
+              type="number"
+              name="securityDeposit"
+              placeholder="e.g. 100"
+              min="0"
+              required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="max-capacity">
+              Max Capacity
+            </Label>
+            <Input
+              id="max-capacity"
+              type="number"
+              name="maxCapacity"
+              placeholder="e.g. 20 people"
+              min="1"
+              required
+            />
+          </div>
+
           <div className="space-y-2">
             <Label htmlFor="hourly-cost">Address</Label>
             <Input

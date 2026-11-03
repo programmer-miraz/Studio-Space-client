@@ -61,12 +61,9 @@ export default function Sign_in() {
         const { data, error } = await authClient.signUp.email({
             ...user,
             callbackURL: callbackUrl,
-            
+
         });
-        if (data) {
-            toast.success("Account created successfully!");
-           
-        }
+  
 
         if (error) {
             toast.error(error.message || "Failed to create account!");
@@ -80,10 +77,7 @@ export default function Sign_in() {
 
         });
 
-        if (data) {
-            toast.success("Account created successfully!");
-        }
-
+      
         if (error) {
             toast.error(error.message || "Failed to create account!");
         }
@@ -94,10 +88,6 @@ export default function Sign_in() {
             provider: "github",
             callbackURL: callbackUrl,
         })
-
-        if (data) {
-            toast.success("Account created successfully!");
-        }
 
         if (error) {
             toast.error(error.message || "Failed to create account!");

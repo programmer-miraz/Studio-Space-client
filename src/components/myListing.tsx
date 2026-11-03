@@ -33,7 +33,7 @@ type MyStudio = {
 
 // ---------- Small piece: one studio card ----------
 function StudioCard({ studio }: { studio: MyStudio; }) {
-
+     console.log(studio);
     const router = useRouter()
     const { data: session } = useSession()
     const userSession = session?.user

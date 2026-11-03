@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 // Replace this URL with your own studio photo whenever you want
 const HERO_IMAGE =
@@ -18,7 +19,7 @@ const Benner = () => {
             </p>
 
             <h1 className="text-4xl font-extrabold  leading-tight tracking-tight md:text-5xl">
-              Find &amp; Book 
+              Find &amp; Book
               <br />
               <span className="text-primary">Creative</span> Studios
             </h1>
@@ -29,10 +30,12 @@ const Benner = () => {
             </p>
 
             <div className="flex flex-wrap gap-3">
-              <Button size="lg" className="rounded-full px-6">
-                Explore Studios
-                <ArrowRight />
-              </Button>
+              <Link href="/Explore_Studios">
+                <Button size="lg" className="rounded-full px-6">
+                  Explore Studios
+                  <ArrowRight />
+                </Button>
+              </Link>
               <Button
                 size="lg"
                 variant="outline"

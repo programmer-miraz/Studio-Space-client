@@ -11,6 +11,8 @@ import {
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 import { github } from "better-auth";
+import { toast } from "react-toastify";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function Sign_in() {
 
@@ -36,6 +38,9 @@ export default function Sign_in() {
     };
 
 
+    const searchParams = useSearchParams();
+    const callbackUrl = searchParams.get("callbackUrl") || "/";
+    console.log(searchParams);
     const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setShowErrors(true);
@@ -54,31 +59,27 @@ export default function Sign_in() {
 
         const { data, error } = await authClient.signIn.email({
             ...user,
-            callbackURL: "/",
+            callbackURL: callbackUrl,
 
         });
-        if (data) {
-            console.log(data);
-
-        }
+   
         if (error) {
-            console.log(error);
+            toast.error(error.message || "Failed login!");
         }
     }
 
-
     const handleGoogleLogin = async () => {
-        const { data, error } = await authClient.signIn.social({
+        const { error } = await authClient.signIn.social({
             provider: "google",
-            callbackURL: "/",
+            callbackURL: callbackUrl,
+            
+
         });
 
 
-        if (data) {
-            console.log(data);
-        }
+
         if (error) {
-            console.log(error);
+            toast.error(error.message || "Failed login!");
         }
 
     }
@@ -87,11 +88,9 @@ export default function Sign_in() {
         const { data, error } = await authClient.signIn.social({
             provider: "github"
         })
-        if (data) {
-            console.log(data);
-        }
+
         if (error) {
-            console.log(error);
+            toast.error(error.message || "Failed login!");
         }
 
     }
