@@ -60,7 +60,7 @@ export default function Sign_in() {
 
         const { data, error } = await authClient.signUp.email({
             ...user,
-            callbackURL: callbackUrl,
+            callbackURL:"/"
 
         });
   
