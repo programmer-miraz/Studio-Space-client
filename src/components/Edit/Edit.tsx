@@ -96,7 +96,7 @@ function CheckboxOption({
 }
 
 const Edit_page = ({ studio, userSession }: { studio: MyStudio, userSession: User }) => {
-    console.log(studio);
+   
     const router = useRouter()
     const [form, setForm] = useState({
         who: studio.title || "",

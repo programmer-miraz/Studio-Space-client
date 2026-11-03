@@ -40,14 +40,14 @@ export default function Sign_in() {
     const searchParams = useSearchParams();
     const callbackUrl = searchParams.get("callbackUrl") || "/";
 
-    /* STEP 3: sign-in handler (same logic as before — validate first,
-       then send the request with better-auth) */
+
+ 
     const handleSignUP = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         const formData = new FormData(e.currentTarget);
         const user = Object.fromEntries(formData.entries()) as { name: string, password: string, email: string }
-        // Password validation চালানো
+       
         setShowErrors(true);
 
         const errors = validatePassword(user.password);
@@ -60,11 +60,15 @@ export default function Sign_in() {
 
         const { data, error } = await authClient.signUp.email({
             ...user,
-            callbackURL:"/"
+            callbackURL:callbackUrl
 
         });
   
 
+        if (data) {
+            redirect("/")
+
+        }
         if (error) {
             toast.error(error.message || "Failed to create account!");
         }
@@ -84,7 +88,7 @@ export default function Sign_in() {
 
     }
     const handleGithub = async () => {
-        const { data, error } = await authClient.signIn.social({
+        const {error } = await authClient.signIn.social({
             provider: "github",
             callbackURL: callbackUrl,
         })
@@ -98,7 +102,6 @@ export default function Sign_in() {
 
 
 
-    /* STEP 5: the UI */
     return (
         <section className="flex min-h-[calc(100vh-4rem)] items-center justify-center bg-gradient-to-br from-[#F5F2FE] to-[#FDFCFF] px-4 py-10 dark:from-[#12151E] dark:to-[#0D0F15]">
 

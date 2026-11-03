@@ -80,7 +80,7 @@ const Footer = () => {
     <div>
       <footer className="overflow-hidden bg-[#121722] text-white">
         {/* Top area: 4 columns */}
-        <div className="grid gap-10 px-6 py-10 sm:grid-cols-2 md:grid-cols-4 md:px-10">
+        <div className="grid gap-10 px-6 py-10 grid-cols-2 sm:grid-cols-3  md:grid-cols-4 md:px-10">
           {/* Column 1: logo + tagline */}
           <div>
             <Link href="/" className="flex items-center gap-2.5">
@@ -117,7 +117,7 @@ const Footer = () => {
           {/* Column 3: categories */}
           <div>
             <ColumnTitle>Categories</ColumnTitle>
-            <ul className="mt-4 space-y-3">
+            <ul className=" mt-4 pace-y-3">
               {CATEGORY_LINKS.map((link) => (
                 <li key={link.name}>
                   <Link

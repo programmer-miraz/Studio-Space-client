@@ -19,7 +19,7 @@ import { useSession } from "@/lib/auth-client";
 import { toast } from "react-toastify";
 import client_getToken from "@/lib/Token/client_get_token";
 
-// ---------- Simple option lists (easy to edit later) ----------
+
 const WHO_OPTIONS = ["Studio Owner", "Photographer", "Videographer", "Content Creator"];
 
 const CATEGORY_OPTIONS = [
@@ -49,10 +49,6 @@ const AMENITY_OPTIONS = [
 ];
 
 
-
-
-
-// One checkbox row. "name" is the text, e.g. "Cyclorama Wall"
 function CheckboxOption({
   name,
   isChecked,
@@ -87,10 +83,9 @@ const Add_studio_page = () => {
     overview: "",
   });
 
-  // Selected amenities live here as a simple array of strings
+
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
 
-  // Add the amenity if missing, remove it if already present
   const toggleAmenity = (name: string) => {
     setSelectedAmenities((prev) =>
       prev.includes(name)
