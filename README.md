@@ -1,6 +1,6 @@
 # StudioSpace
 
-**Live Site URL:** YOUR_CLIENT_LIVE_URL
+**Live Site URL:** https://studio-space-woad-eight.vercel.app
 
 ## Features of My Website
 - Explore different creative studios, including photography studios, film stages, podcast lounges, and music suites.
@@ -25,8 +25,5 @@
 4. Add your MongoDB connection URI and JWT secret.
 5. Start the backend server using `npm run dev`.
 6. Start the client using `npm run dev`.
-7. Open `http://localhost:3000` in your browser.
+7. Open `https://studio-space-woad-eight.vercel.app` in your browser.
 
-## Examiner Test Credentials
-- **Email:** YOUR_TEST_EMAIL
-- **Password:** YOUR_TEST_PASSWORD

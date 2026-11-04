@@ -48,7 +48,7 @@ const Feature = async () => {
         throw new Error("Failed to fetch studios data");
     }
     const data: Studio[] = await res.json();
-    console.log(data);
+
 
     return (
         <section className="mx-auto max-w-6xl px-4 py-10">
@@ -57,13 +57,7 @@ const Feature = async () => {
                 <h2 className="text-2xl font-bold text-foreground md:text-3xl">
                     Featured Studios
                 </h2>
-                <Link
-                    href="Explore_Studios"
-                    className="flex items-center gap-1 text-sm font-medium text-foreground transition-colors hover:text-primary"
-                >
-                    View All
-                    <ArrowRight className="size-4" />
-                </Link>
+    
             </div>
 
             {/* Carousel showing 1 card on mobile, 2 on tablet, 3 on desktop */}

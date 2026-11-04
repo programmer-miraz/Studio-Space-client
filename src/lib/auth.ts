@@ -1,4 +1,4 @@
-import { betterAuth} from "better-auth";
+import { betterAuth } from "better-auth";
 import { MongoClient } from "mongodb";
 import { mongodbAdapter } from "@better-auth/mongo-adapter";
 import { jwt } from "better-auth/plugins";
@@ -8,6 +8,7 @@ const db = client.db("cart");
 export const auth = betterAuth({
     emailAndPassword: {
         enabled: true,
+        autoSignIn: false,
     },
     socialProviders: {
         google: {

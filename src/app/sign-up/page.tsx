@@ -61,15 +61,15 @@ export default function Sign_in() {
 
         const { data, error } = await authClient.signUp.email({
             ...user,
-            callbackURL: "/"
-            
+          callbackURL: "/sign-in",
+      
             
         });
         
         if (data) {
-            toast.success("Account created successfully!");
+            toast.success("Account created successfully!-Please-login");
+            router.replace("/sign-in")
             router.refresh()
-            router.push("/")
 
 
         }

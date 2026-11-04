@@ -1,6 +1,16 @@
 "use client"
 import { useState } from "react";
-import { Aperture, CalendarCheck, ChevronDown, Heart, LayoutDashboard, LogOutIcon, Menu, PlusCircle, X } from "lucide-react";
+import {
+    Aperture,
+    CalendarCheck,
+    ChevronDown,
+    Heart,
+    LayoutDashboard,
+    LogOutIcon,
+    Menu,
+    PlusCircle,
+    X,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ThemeToggle from "./Theme/ThemeToggle";
 import Link from "next/link";
@@ -11,7 +21,7 @@ import {
     Avatar,
     AvatarFallback,
     AvatarImage,
-} from "@/components/ui/avatar"
+} from "@/components/ui/avatar";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -19,50 +29,54 @@ import {
     DropdownMenuItem,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-
+} from "@/components/ui/dropdown-menu";
 
 // Simple array so adding/removing a link is easy
 const NAV_LINKS = [
-    { name: "Home", url: "/", },
+    { name: "Home", url: "/" },
     { name: "Explore Studios", url: "/Explore_Studios" },
     { name: "How It Works", url: "/#how-it-works" },
     { name: "About Us", url: "/#about" },
 ];
 
 const Navber = () => {
-    const router = useRouter()
+    const router = useRouter();
     const pathname = usePathname();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const { data: session, isPending } = useSession();
-    const userSession = session?.user;
-    const handleSignOUt = async () => {
-        const { data } = await authClient.signOut()
-        if (data?.success) {
-            localStorage.clear();
-            router.push("/sign-in")
-            router.refresh()
-        }
 
-    }
+    // Single source of truth: no local copy of the user
+    const { data: session, isPending, refetch } = useSession();
+    const user = session?.user ?? null;
 
+    const handleSignOut = async () => {
+        await authClient.signOut({
+            fetchOptions: {
+                onSuccess: async () => {
+                    await refetch();            // force the session atom to update
+                    router.replace("/sign-in");
+                    router.refresh();           // re-run server components / clear router cache
+                },
+                onError: (ctx) => {
+                    console.error("Sign out failed:", ctx.error);
+                },
+            },
+        });
+    };
 
     return (
         <header className="border-b border-border bg-white dark:bg-card">
             <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
                 {/* Logo */}
-                < Link href="/" className="flex items-center gap-2">
+                <Link href="/" className="flex items-center gap-2">
                     <span className="flex size-9 items-center justify-center rounded-lg bg-primary">
                         <Aperture className="size-5 text-primary-foreground" />
                     </span>
-
                     <span className="text-lg font-bold text-foreground">
                         Studio<span className="text-primary">Space</span>
                     </span>
-
                 </Link>
 
-                {/* Center links (hidden on small screens for now) */}
+                {/* Center links (hidden on small screens) */}
                 <nav className="hidden items-center gap-8 md:flex">
                     {NAV_LINKS.map((link) => {
                         const isActive = pathname === link.url;
@@ -83,91 +97,103 @@ const Navber = () => {
                     })}
                 </nav>
 
-
                 {/* Right side actions */}
                 <div className="flex items-center gap-2">
                     <ThemeToggle />
 
-                    {isPending ? (<div className="h-9 w-28 animate-pulse rounded-2xl bg-gray-100 dark:bg-gray-800" />) : userSession ? (<>
-
+                    {isPending ? (
+                        // Prevents Sign In / Sign Up flashing while the session loads
+                        <div className="h-10 w-24 animate-pulse rounded-full bg-muted" />
+                    ) : user ? (
                         <DropdownMenu>
                             <DropdownMenuTrigger
                                 render={
                                     <Button
                                         type="button"
                                         variant="ghost"
-                                        className="h-10 gap-2 rounded-full border border-border/60 bg-transparent px-3 shadow-none cursor-pointer hover:bg-primary/5 active:bg-transparent"
+                                        className="h-10 cursor-pointer gap-2 rounded-full border border-border/60 bg-transparent px-3 shadow-none hover:bg-primary/5 active:bg-transparent"
                                     >
                                         <Avatar className="size-8 border border-primary/20">
                                             <AvatarImage
                                                 referrerPolicy="no-referrer"
-                                                src={userSession?.image || "https://github.com/shadcn.png"}
-                                                alt={userSession?.name || "User"}
+                                                src={user.image || "https://github.com/shadcn.png"}
+                                                alt={user.name || "User"}
                                             />
-
                                             <AvatarFallback className="bg-primary/10 font-semibold text-primary">
-                                                {userSession?.name?.charAt(0).toUpperCase() || "U"}
+                                                {user.name?.charAt(0).toUpperCase() || "U"}
                                             </AvatarFallback>
                                         </Avatar>
 
                                         <span className="max-w-24 truncate bg-transparent text-sm font-medium text-foreground">
-                                            {userSession?.name?.slice(0, 9) || "User"}
+                                            {user.name?.slice(0, 9) || "User"}
                                         </span>
 
                                         <ChevronDown className="size-4 text-muted-foreground" />
                                     </Button>
                                 }
                             />
-                            <DropdownMenuContent className="w-41 ">
+                            <DropdownMenuContent className="w-44">
                                 <DropdownMenuGroup>
-
-                                    <DropdownMenuItem className="flex cursor-pointer items-center gap-2.5">
+                                    <DropdownMenuItem
+                                        className="flex cursor-pointer items-center gap-2.5"
+                                        render={<Link href="/Add-new-studio" />}
+                                    >
                                         <PlusCircle className="h-4 w-4" />
-                                        <Link href="/Add-new-studio">
-                                            <span>Add New Studio</span>
-                                        </Link>
+                                        Add New Studio
                                     </DropdownMenuItem>
 
-                                    <DropdownMenuItem className="flex cursor-pointer items-center gap-2.5">
+                                    <DropdownMenuItem
+                                        className="flex cursor-pointer items-center gap-2.5"
+                                        render={<Link href="/my-listings" />}
+                                    >
                                         <LayoutDashboard className="h-4 w-4" />
-                                        <Link href="/my-listings">
-                                            <span>My Studio Listings</span>
-                                        </Link>
+                                        My Studio Listings
                                     </DropdownMenuItem>
 
-                                    <DropdownMenuItem className="flex cursor-pointer items-center gap-2.5">
+                                    <DropdownMenuItem
+                                        className="flex cursor-pointer items-center gap-2.5"
+                                        render={<Link href="/Booking-add" />}
+                                    >
                                         <CalendarCheck className="h-4 w-4" />
-                                        <Link href="/Booking-add">
-                                            <span>My Bookings</span>
-                                        </Link>
+                                        My Bookings
                                     </DropdownMenuItem>
 
                                     <DropdownMenuItem className="flex cursor-pointer items-center gap-2.5">
                                         <Heart className="h-4 w-4" />
-                                        <span>Saved Wishlist</span>
+                                        Saved Wishlist
                                     </DropdownMenuItem>
-
                                 </DropdownMenuGroup>
+
                                 <DropdownMenuSeparator />
+
                                 <DropdownMenuGroup>
-                                    <DropdownMenuItem variant="destructive" onClick={handleSignOUt}><LogOutIcon />Log out</DropdownMenuItem>
+                                    <DropdownMenuItem
+                                        variant="destructive"
+                                        className="cursor-pointer"
+                                        onClick={handleSignOut}
+                                    >
+                                        <LogOutIcon />
+                                        Log out
+                                    </DropdownMenuItem>
                                 </DropdownMenuGroup>
                             </DropdownMenuContent>
                         </DropdownMenu>
+                    ) : (
+                        <div className="hidden items-center gap-2 sm:flex">
+                            <Link href="/sign-in">
+                                <Button variant="outline" className="cursor-pointer rounded-full px-4 text-sm sm:px-5">
+                                    Sign In
+                                </Button>
+                            </Link>
+                            <Link href="/sign-up">
+                                <Button className="cursor-pointer rounded-full px-4 text-sm sm:px-5">
+                                    Sign Up
+                                </Button>
+                            </Link>
+                        </div>
+                    )}
 
-
-                    </>) : (<div className="hidden items-center gap-2 sm:flex">
-                        <Link href="/sign-in">
-                            <Button variant="outline" className="rounded-full cursor-pointer px-4 text-sm sm:px-5">
-                                Sign In
-                            </Button>
-                        </Link>
-                        <Link href="/sign-up">
-                            <Button className="rounded-full cursor-pointer px-4 text-sm sm:px-5">Sign Up</Button>
-                        </Link>
-                    </div>)}
-
-                    {/* Mobile hamburger (opens the stacked nav panel below) */}
+                    {/* Mobile hamburger */}
                     <Button
                         type="button"
                         variant="ghost"
@@ -208,7 +234,7 @@ const Navber = () => {
                     </ul>
 
                     {/* Mobile-only sign in / sign up shortcuts */}
-                    {!userSession && (
+                    {!isPending && !user && (
                         <div className="mt-3 flex items-center gap-2 border-t border-border pt-3 sm:hidden">
                             <Link href="/sign-in" className="flex-1" onClick={() => setIsMobileMenuOpen(false)}>
                                 <Button variant="outline" className="w-full cursor-pointer rounded-full">
