@@ -12,11 +12,13 @@ import {
 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
-import { redirect, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
-export default function Sign_in() {
 
+
+export default function Sign_in() {
+    const router = useRouter()
     /* STEP 1: small UI states */
     const [showPassword, setShowPassword] = useState(false); // eye toggle
     const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
@@ -37,17 +39,16 @@ export default function Sign_in() {
 
         return errors;
     };
-    const searchParams = useSearchParams();
-    const callbackUrl = searchParams.get("callbackUrl") || "/";
 
 
- 
+
+
     const handleSignUP = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         const formData = new FormData(e.currentTarget);
         const user = Object.fromEntries(formData.entries()) as { name: string, password: string, email: string }
-       
+
         setShowErrors(true);
 
         const errors = validatePassword(user.password);
@@ -60,13 +61,16 @@ export default function Sign_in() {
 
         const { data, error } = await authClient.signUp.email({
             ...user,
-            callbackURL:callbackUrl
-
+            callbackURL: "/"
+            
+            
         });
-  
-
+        
         if (data) {
-            redirect("/")
+            toast.success("Account created successfully!");
+            router.refresh()
+            router.push("/")
+
 
         }
         if (error) {
@@ -77,21 +81,32 @@ export default function Sign_in() {
     const handleGoogle = async () => {
         const { data, error } = await authClient.signIn.social({
             provider: "google",
-            callbackURL: callbackUrl,
+            callbackURL: "/"
 
+            
         });
+        if (data) {
+            router.push("/")
+            router.refresh()
+            toast.success("Account created successfully!");
+        }
 
-      
+
         if (error) {
             toast.error(error.message || "Failed to create account!");
         }
 
     }
     const handleGithub = async () => {
-        const {error } = await authClient.signIn.social({
+        const { data, error } = await authClient.signIn.social({
             provider: "github",
-            callbackURL: callbackUrl,
+            callbackURL: "/"
+
         })
+        if (data) {
+            router.push("/")
+            toast.success("Account created successfully!");
+        }
 
         if (error) {
             toast.error(error.message || "Failed to create account!");

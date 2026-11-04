@@ -11,8 +11,9 @@ import {
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 import { github } from "better-auth";
-import { toast } from "react-toastify";
 import { useRouter, useSearchParams } from "next/navigation";
+import { toast } from "react-toastify";
+
 
 export default function Sign_in() {
 
@@ -62,19 +63,23 @@ export default function Sign_in() {
             callbackURL: callbackUrl,
 
         });
-   
+
         if (error) {
             toast.error(error.message || "Failed login!");
         }
     }
 
     const handleGoogleLogin = async () => {
-        const { error } = await authClient.signIn.social({
+        const { data, error } = await authClient.signIn.social({
             provider: "google",
             callbackURL: callbackUrl,
-            
+
 
         });
+
+        if (data) {
+            toast.success("Login successful!")
+        }
 
 
 
@@ -88,6 +93,9 @@ export default function Sign_in() {
         const { data, error } = await authClient.signIn.social({
             provider: "github"
         })
+        if (data) {
+            toast.success("Login successful!")
+        }
 
         if (error) {
             toast.error(error.message || "Failed login!");

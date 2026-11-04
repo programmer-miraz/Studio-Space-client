@@ -34,13 +34,15 @@ const Navber = () => {
     const router = useRouter()
     const pathname = usePathname();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const { data: session, isPending, refetch } = useSession();
+    const { data: session, isPending } = useSession();
     const userSession = session?.user;
-    const handleSignOUt = () => {
-        authClient.signOut()
-        localStorage.clear();
-        router.push("/sign-in")
-        refetch()
+    const handleSignOUt = async () => {
+        const { data } = await authClient.signOut()
+        if (data?.success) {
+            localStorage.clear();
+            router.push("/sign-in")
+            router.refresh()
+        }
 
     }
 
